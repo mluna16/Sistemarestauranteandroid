@@ -1,0 +1,11 @@
+<!--
+Vista que contiene 1 panel para pantallas pequeñas.
+-->
+
+<!--
+Este FrameLayout contendrá un fragmento dinámico con el contenido del elemento pulsado del listado
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/framelayout_contenedor_detalle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />

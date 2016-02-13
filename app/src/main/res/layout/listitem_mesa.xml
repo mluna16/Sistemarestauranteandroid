@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/card2"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="5dp"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="4dp"
+    card_view:cardUseCompatPadding="true">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false"
+    android:gravity="center">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:popupTheme="@style/Theme.AppCompat.Light"
+        app:subtitleTextAppearance="@style/Card.Subtitle"
+        app:theme="@style/ToolbarCard"
+        app:titleTextAppearance="@style/Card.Title">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+android:orientation="horizontal"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:baselineAligned="false"
+android:gravity="center">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="155dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="5">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="20sp"
+        android:text="@string/Nombreplato"
+        android:padding="5dp"
+        android:editable="false"
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:gravity="left" />
+    <TextView android:id="@+id/Lblnommesa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:text="@string/hello_world"
+        android:padding="5dp"
+        android:editable="false" />
+</LinearLayout>
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="75dp"
+    android:layout_height="75dp"
+    android:layout_weight="3">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="20sp"
+        android:text="@string/Numeromesa"
+        android:padding="5dp"
+        android:editable="false"
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:gravity="left" />
+    <TextView android:id="@+id/Lbldes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:text="@string/hello_world"
+        android:padding="5dp"
+        android:editable="false" />
+</LinearLayout>-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="155dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="2">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="20sp"
+        android:text="@string/Precio"
+        android:padding="5dp"
+        android:editable="false"
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:gravity="left" />
+    <TextView android:id="@+id/Lblpremesa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:text="@string/hello_world"
+        android:padding="5dp"
+        android:editable="false" />
+</LinearLayout>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="75dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="2">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="20sp"
+        android:text="@string/Status"
+        android:padding="5dp"
+        android:editable="false"
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:gravity="left" />
+    <TextView android:id="@+id/Lblstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:text="@string/hello_world"
+        android:padding="5dp"
+        android:editable="false" />
+</LinearLayout>
+</LinearLayout>
+
+
+    </android.support.v7.widget.Toolbar>
+
+
+
+</LinearLayout>
+    </android.support.v7.widget.CardView>

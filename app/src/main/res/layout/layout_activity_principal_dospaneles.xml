@@ -1,0 +1,33 @@
+<!--
+Vista que contiene los 2 paneles para las pantallas grandes.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:baselineAligned="false"
+    android:divider="?android:attr/dividerHorizontal"
+    android:orientation="horizontal"
+    android:showDividers="middle" >
+    
+    <!--
+    Este fragmento estático contiene al listado
+    -->
+    <fragment
+        android:id="@+id/fragment_listado"
+        android:name="com.example.pedro.tesisalpha.Fragment_Lista"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <!--
+    Este FrameLayout contendrá un fragmento dinámico con el contenido del elemento pulsado del listado
+    -->
+    <FrameLayout
+        android:id="@+id/framelayout_contenedor_detalle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
+
+</LinearLayout>

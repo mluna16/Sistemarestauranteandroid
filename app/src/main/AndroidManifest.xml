@@ -1,0 +1,57 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.pedro.tesisalpha">
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="19" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"
+        />
+    <application android:allowBackup="true" android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme">
+        <activity
+            android:name="Activity_Principal"
+            android:label="@string/app_name" >
+
+        </activity>
+        <activity
+            android:name="Activity_Detalle"
+            android:label=""
+            android:parentActivityName=".Activity_Principal" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ItemListActivity" />
+        </activity>
+        <activity
+            android:name=".MesasActivity"
+            android:label="@string/mesas" >
+        </activity>
+        <activity
+            android:name=".devolveractivity"
+            android:label="@string/devolver" >
+        </activity>
+        <activity
+            android:name=".MesaPedidoActivity"
+            android:label="@string/Pedidos" >
+        </activity>
+        <activity
+            android:name=".Pedido_Activity"
+            android:label="@string/title_Pedido_Activity"
+            >
+        </activity>
+        <activity
+            android:name=".Menu_Activity"
+            android:label="@string/Productos" >
+        </activity>
+        <activity
+            android:name=".Sesion"
+            android:label="@string/title_activity_sesion">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>ent-filter>
+        </activity>
+    </application>
+
+</manifest>

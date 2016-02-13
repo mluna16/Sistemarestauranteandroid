@@ -1,0 +1,8 @@
+<resources>
+
+    <!--
+    Alias del Layout que reemplaza la versión de solo listado con la de dos paneles en pantallas grandes
+    -->
+    <item name="layout_activity_principal_listado" type="layout">@layout/layout_activity_principal_dospaneles</item>
+
+</resources>
