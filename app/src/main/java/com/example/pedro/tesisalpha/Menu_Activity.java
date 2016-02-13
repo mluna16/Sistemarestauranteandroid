@@ -1,7 +1,5 @@
 package com.example.pedro.tesisalpha;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,17 +8,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.FocusFinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -33,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Menu_Activity extends ActionBarActivity {
@@ -47,7 +40,7 @@ public class Menu_Activity extends ActionBarActivity {
     DefaultHttpClient httpclient = new DefaultHttpClient();
     JSONArray productos;
     ArrayList<Menues> datos;
-    public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
+    public final static String EXTRA_MESSAGE = "message";
     private RecyclerView recView;
     String message,plato,cantidad;
     private ImageView btnok;
@@ -231,22 +224,18 @@ int j=0;
         });
     }
     public class Agregar extends AsyncTask<String,Integer,Boolean> {
-        String txt2="Cargando Mesas",tipousuario="";
+        String trx="",txt2="Cargando Mesas",tipousuario="";
         JSONObject respJSON;
         public Boolean doInBackground(String... params) {
             httphandler handler = new httphandler();
+            httphandler handler1 = new httphandler();
             for (int i = 0; i < genera.length; i++) {
-                try {
+              /*  */
                     params[1]=genera[i][1];
                     params[2]=genera[i][0];
                     txt2 = handler.postpedido("http://45.55.227.224/api/v1/order/store", httpclient, params);
+                    trx = handler1.get("http://45.55.227.224/api/v1/user/send", httpclient);
                     sessionInfo = handler.sessionInfo;
-                    tipousuario = params[0];
-                    respJSON = new JSONObject(txt2);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
             return handler.sw;
 

@@ -39,4 +39,6 @@
     <string name="devolver">Devolver</string>
     <string name="devolverpedido">Devolver Pedido</string>
     <string name="media_route_menu_title">Enviar Pantalla</string>
+    <string name="senderid" />
+    <string name="title_activity_main">MainActivity</string>
 </resources>

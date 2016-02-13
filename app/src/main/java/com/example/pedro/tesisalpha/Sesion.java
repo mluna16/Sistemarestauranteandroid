@@ -1,14 +1,11 @@
 package com.example.pedro.tesisalpha;
 
-import android.app.Notification;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
@@ -29,9 +28,11 @@ import org.json.JSONObject;
 public class Sesion extends ActionBarActivity {
     TextView txtEmail,txtPassword,lblResultado;
     Button btnBotonSimple;
+    ProgressDialog mProgressDialog;
     private Context context=this;
     private ImageView imagen;
     private Animation rotacion;
+    String idusuario="";
     httphandler handler;
     Cookie sessionInfo;
     DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -39,11 +40,13 @@ public class Sesion extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sesion);
+        int estado = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         btnBotonSimple = (Button)findViewById(R.id.sign_in_button);
         txtEmail = (TextView) findViewById(R.id.lblemail);
         txtPassword = (TextView) findViewById(R.id.lblpassword);
+        //mProgressDialog = (ProgressDialog) findViewById(R.id.mProgressDialog);
  /*       final int millisToWait=1000;
         int millisToVibrate=2000;
         final long[] vibratePattern = new long[] {
@@ -123,6 +126,7 @@ public class Sesion extends ActionBarActivity {
                 JSONObject data = respJSON.getJSONObject("data");
                 JSONObject userdata = data.getJSONObject("userData");
                 tipousuario=userdata.getString("type");
+                idusuario=userdata.getString("id");
                 return true;
 
             } catch (JSONException e) {
@@ -144,28 +148,20 @@ public class Sesion extends ActionBarActivity {
                     l.setVisibility(View.INVISIBLE);
                 }
 
-
+            Intent intent = null;
+            httpcookies h = new httpcookies(sessionInfo);
             if (tipousuario.equals("mesonero")){
-                httpcookies h = new httpcookies(sessionInfo);
-                Intent intent;
-                intent = new Intent(Sesion.this, MesasActivity.class);
-                intent.putExtra("json", txt);
-                intent.putExtra("cookie",h);
-
-                startActivity(intent);
+                intent = new Intent(Sesion.this, Mesas_Activity.class);
             }else{
                 if (tipousuario.equals("cocina")){
-                    httpcookies h = new httpcookies(sessionInfo);
-                    Intent intent;
                     intent = new Intent(Sesion.this, Pedido_Activity.class);
-                    //intent.putExtra("json", txt);
-                    intent.putExtra("cookie",h);
-
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.zoom_back_in, R.anim.zoom_back_out);
                 }
             }
-
+            intent.putExtra("json", txt);
+            intent.putExtra("cookie",h);
+            intent.putExtra("idusuario",idusuario);
+            startActivity(intent);
+            overridePendingTransition(R.anim.zoom_back_in, R.anim.zoom_back_out);
         }
     }
 

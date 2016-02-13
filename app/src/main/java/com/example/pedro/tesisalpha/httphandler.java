@@ -66,6 +66,43 @@ Boolean sw=true;
         }
         return text;
     }
+    public String postgcm(String posturl,DefaultHttpClient httpclient,String usuario, String regId){
+
+        try {
+/*Creamos el objeto de HttpClient que nos permitira conectarnos mediante peticiones http*/
+            HttpPost httppost = new HttpPost(posturl);
+/*El objeto HttpPost permite que enviemos una peticion de tipo POST a una URL especificada*/
+            //AÑADIR PARAMETROS
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+/*            params.add(new BasicNameValuePair("password",param[1]));
+            params.add(new BasicNameValuePair("email",param[0]));*/
+
+                params.add(new BasicNameValuePair("iduser",usuario));
+                params.add(new BasicNameValuePair("codigo",regId));
+
+
+
+
+		/*Una vez añadidos los parametros actualizamos la entidad de httppost, esto quiere decir en pocas palabras anexamos los parametros al objeto para que al enviarse al servidor envien los datos que hemos añadido*/
+            httppost.setEntity(new UrlEncodedFormEntity(params));
+
+                  /*Finalmente ejecutamos enviando la info al server*/
+            HttpResponse resp = httpclient.execute(httppost);
+            HttpEntity ent = resp.getEntity();/*y obtenemos una respuesta*/
+//cookies
+            obtenercookie(httpclient);
+
+            //httpclient.getConnectionManager().shutdown();
+            //fin de cookies
+            text = EntityUtils.toString(ent);
+            if(!resp.equals("true"))
+                sw = false;
+        }
+        catch(Exception e) { text="error= "+e;
+            sw = false;
+        }
+        return text;
+    }
     public String poststatus(String posturl,DefaultHttpClient httpclient,String... param){
 
         try {

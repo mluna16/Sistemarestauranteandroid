@@ -6,14 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,8 +18,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,7 +36,7 @@ import java.util.ArrayList;
 public class MesaPedidoActivity extends ActionBarActivity {
     public final static String EXTRA_PLATILLO="platillo";
     public final static String EXTRA_CANTIDAD="cantidad";
-    public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
+    public final static String EXTRA_MESSAGE = "message";
     private ImageView btnBotonSimple;
     Cookie sessionInfo;
     boolean reload=false,busy=false,sw=true;
@@ -79,7 +72,7 @@ public class MesaPedidoActivity extends ActionBarActivity {
         httpclient.getCookieStore().addCookie(newCookie);
         // Get the message from the intent
 
-        message = i.getStringExtra(MesasActivity.EXTRA_MESSAGE);
+        message = i.getStringExtra(EXTRA_MESSAGE);
         /*plato = i.getStringExtra(Menu_Activity.EXTRA_PLATILLO);
         cantidad = i.getStringExtra(Menu_Activity.EXTRA_CANTIDAD);
 */
@@ -201,6 +194,8 @@ public class MesaPedidoActivity extends ActionBarActivity {
             txt = handler.get("http://45.55.227.224/api/v1/table/show/"+message,httpclient);
             sessionInfo=handler.sessionInfo;
             //numm=txt;
+            Log.i("txt", message);
+            Log.i("txt", txt);
             try {
                 respJSON = new JSONObject(txt);
                 JSONObject data = respJSON.getJSONObject("data");
