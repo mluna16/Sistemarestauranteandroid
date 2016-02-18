@@ -30,14 +30,14 @@ public class GCMIntentService extends IntentService
         {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
             {
-                mostrarNotification(extras.getString("msg"));
+                mostrarNotification(extras.getString("message"),extras.getString("title"),extras.getString("subtitle"));
             }
         }
 
         GCMBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    private void mostrarNotification(String msg)
+    private void mostrarNotification(String msg,String tit,String sub)
     {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -45,7 +45,8 @@ public class GCMIntentService extends IntentService
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(android.R.drawable.stat_sys_warning)
-                        .setContentTitle("Notificación GCM")
+                        .setContentTitle(tit)
+                        .setSubText(sub)
                         .setContentText(msg);
 
         Intent notIntent =  new Intent(this, MesasActivity.class);

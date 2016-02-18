@@ -234,7 +234,7 @@ int j=0;
                     params[1]=genera[i][1];
                     params[2]=genera[i][0];
                     txt2 = handler.postpedido("http://45.55.227.224/api/v1/order/store", httpclient, params);
-                    trx = handler1.get("http://45.55.227.224/api/v1/user/send", httpclient);
+                    //trx = handler1.get("http://45.55.227.224/api/v1/user/send", httpclient);
                     sessionInfo = handler.sessionInfo;
             }
             return handler.sw;
