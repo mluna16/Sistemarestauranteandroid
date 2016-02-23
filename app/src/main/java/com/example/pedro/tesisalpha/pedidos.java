@@ -10,13 +10,14 @@ public class pedidos {
     public String status;
     public Integer numeromesa;
     public String mesonero;
-    public pedidos(String identidad,String nom, Integer lim, String img, String des){
+    private boolean isSelected;
+    public pedidos(String identidad,String nom, Integer lim, String img, String des,boolean isSelected){
         id=identidad;
         nombre=nom;
         numeromesa=lim;
         mesonero=img;
         status=des;
-
+        this.isSelected = isSelected;
 
     }
     public String getId(){
@@ -33,6 +34,13 @@ public class pedidos {
     }
     public Integer getNumeromesa(){
         return numeromesa;
+    }
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 }
 

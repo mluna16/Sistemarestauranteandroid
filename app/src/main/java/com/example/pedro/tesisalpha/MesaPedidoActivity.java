@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,14 +65,24 @@ public class MesaPedidoActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent i = getIntent();
-        httpcookies objcookie = (httpcookies)i.getSerializableExtra("cookie");
+        /*httpcookies objcookie = (httpcookies)i.getSerializableExtra("cookie");
         BasicClientCookie newCookie = new BasicClientCookie(objcookie.getName(),objcookie.getValue());
-        newCookie.setDomain(objcookie.getDomain());
-
+        newCookie.setDomain(objcookie.getDomain());*/
+        SharedPreferences prefs = getSharedPreferences(
+                "usuario",
+                Context.MODE_PRIVATE);
+        String cookienombre = prefs.getString("cookie_nombre", "") ;
+        String cookievalor = prefs.getString("cookie_valor", "") ;
+        String cookiedominio = prefs.getString("cookie_dominio", "") ;
+        BasicClientCookie newCookie = new BasicClientCookie(cookienombre,cookievalor);
+        newCookie.setDomain(cookiedominio);
         httpclient.getCookieStore().addCookie(newCookie);
         // Get the message from the intent
 
-        message = i.getStringExtra(EXTRA_MESSAGE);
+
+        message  = prefs.getString("mesa", i.getStringExtra(EXTRA_MESSAGE));
+
+        //message = i.getStringExtra(EXTRA_MESSAGE);
         /*plato = i.getStringExtra(Menu_Activity.EXTRA_PLATILLO);
         cantidad = i.getStringExtra(Menu_Activity.EXTRA_CANTIDAD);
 */
@@ -99,7 +109,6 @@ public class MesaPedidoActivity extends ActionBarActivity {
         filter.addAction("eliminar");
         filter.addAction("editar");
         filter.addAction("devolver");
-
             registerReceiver(mBroadcast, filter);
 
 
@@ -194,8 +203,7 @@ public class MesaPedidoActivity extends ActionBarActivity {
             txt = handler.get("http://45.55.227.224/api/v1/table/show/"+message,httpclient);
             sessionInfo=handler.sessionInfo;
             //numm=txt;
-            Log.i("txt", message);
-            Log.i("txt", txt);
+
             try {
                 respJSON = new JSONObject(txt);
                 JSONObject data = respJSON.getJSONObject("data");

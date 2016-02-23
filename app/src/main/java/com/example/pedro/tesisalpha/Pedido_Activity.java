@@ -1,9 +1,8 @@
 package com.example.pedro.tesisalpha;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,15 +10,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -37,6 +32,7 @@ import java.util.ArrayList;
 public class Pedido_Activity extends AppCompatActivity {
     public final static String EXTRA_PLATILLO="platillo";
     public final static String EXTRA_CANTIDAD="cantidad";
+    String[] separated;
     Cookie sessionInfo;
     boolean reload=false, busy=true, sw=true;
     private static final String PROPERTY_REG_ID = "registration_id";
@@ -49,13 +45,13 @@ public class Pedido_Activity extends AppCompatActivity {
     String idusuario="";
     private String regid;
     private GoogleCloudMessaging gcm;
+    private ImageView btnok;
     private Context context=this;
     DefaultHttpClient httpclient = new DefaultHttpClient();
     JSONArray productos;
     ArrayList<pedidos> datos;
     public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
     private RecyclerView recView;
-    Recargar r = new Recargar();
     String message,plato,cantidad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,16 +60,25 @@ public class Pedido_Activity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbarcocina);
         setSupportActionBar(toolbar);
         Intent i = getIntent();
-        httpcookies objcookie = (httpcookies)i.getSerializableExtra("cookie");
-        BasicClientCookie newCookie = new BasicClientCookie(objcookie.getName(),objcookie.getValue());
-        newCookie.setDomain(objcookie.getDomain());
+        SharedPreferences prefs =
+                getSharedPreferences("usuario", Context.MODE_PRIVATE);
+        //List<Cookie> cookies = null;
+        String cookienombre = prefs.getString("cookie_nombre", "") ;
+        String cookievalor = prefs.getString("cookie_valor", "") ;
+        String cookiedominio = prefs.getString("cookie_dominio", "") ;
+        BasicClientCookie newCookie = new BasicClientCookie(cookienombre,cookievalor);
+        newCookie.setDomain(cookiedominio);
+        //cookies.
+        //cookies= prefs.getString("cookie", "");
+
+        //httpcookies objcookie = (httpcookies)i.getSerializableExtra("cookie");
+
         httpclient.getCookieStore().addCookie(newCookie);
         productos p = new productos();
         p.execute();
-        Recargar r = new Recargar();
-        r.execute();
         LinearLayout l = (LinearLayout) findViewById(R.id.ocultococina);
         l.setVisibility(View.VISIBLE);
+
     }
     public void openact() {
         Toast toast = Toast.makeText(getApplicationContext(),"recargando" , Toast.LENGTH_SHORT);
@@ -85,20 +90,13 @@ public class Pedido_Activity extends AppCompatActivity {
         startActivity(intent);*/
         productos p = new productos();
         p.execute();
-        reload=false;
-        r = new Recargar();
-        r.execute();
     }
     public void onResume(){
         super.onResume();
-
-        r.execute();
     }
     @Override
     public void onPause(){
         super.onPause();
-
-        r.cancel(true);
     }
 
     @Override
@@ -158,7 +156,7 @@ public class Pedido_Activity extends AppCompatActivity {
         for(int i=0; i<productos.length(); i++){
             try {
                 JSONObject jsonObject = productos.getJSONObject(i);
-                datos.add(new pedidos(jsonObject.getString("idOrder"),jsonObject.getString("nombrePlato"),jsonObject.getInt("mesa"),jsonObject.getString("mesonero"),"Pendiente"));
+                datos.add(new pedidos(jsonObject.getString("idOrder"),jsonObject.getString("nombrePlato"),jsonObject.getInt("mesa"),jsonObject.getString("mesonero"),"Pendiente",false));
 // "Descripcion " + jsonObject.getString("description")
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -172,13 +170,13 @@ public class Pedido_Activity extends AppCompatActivity {
 
 
 
-                adaptador.setOnClickListener(new View.OnClickListener() {
+/*                adaptador.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
                         r.cancel(true);
-                        /*
-                        i.refreshDrawableState();*/
+                        *//*
+                        i.refreshDrawableState();*//*
 
                             Log.i("DemoRecView", "Pulsado el elemento " + (recView.getChildPosition(v) + 1));
                             int posi = recView.getChildAdapterPosition(v);
@@ -223,11 +221,11 @@ public class Pedido_Activity extends AppCompatActivity {
                             AlertDialog alert11 = builder1.create();
                             alert11.show();
 
-                        /*Log.i("DemoRecView", "Pulsado el elemento " + (recView.getChildPosition(v) + 1));
+                        *//*Log.i("DemoRecView", "Pulsado el elemento " + (recView.getChildPosition(v) + 1));
                         //openact(recView.getChildPosition(v));
-                        */
+                        *//*
                     }
-                });
+                });*/
 
         recView.setAdapter(adaptador);
 
@@ -238,6 +236,44 @@ public class Pedido_Activity extends AppCompatActivity {
                  new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
 */
         recView.setItemAnimator(new DefaultItemAnimator());
+        btnok = (ImageView)findViewById(R.id.button_listo);
+        btnok.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String CurrentString = "Fruit: they taste good";
+
+   /*             btnok.refreshDrawableState();
+                Animation logoMoveAnimation = AnimationUtils.loadAnimation(context, R.anim.rotar2);
+                btnok.startAnimation(logoMoveAnimation);*/
+                String data = "";
+                ArrayList<pedidos> stlist = ((AdaptadorPedido) adaptador)
+                        .getPedidostist();
+                for (int i = 0; i < stlist.size(); i++) {
+                    pedidos seleccion = stlist.get(i);
+                    if (seleccion.isSelected() == true) {
+                        String a =seleccion.getNombre();
+                        String b =seleccion.getId();
+                        if ((stlist.size()-1)==i){
+                            data=data+b;
+                        }else {
+                            data=data+b+":";
+                        }
+
+
+                        //data = data + "\n" + seleccion.getNombre().toString() + " " + seleccion.getCantidad();
+                    }
+                }
+                //Toast.makeText(Pedido_Activity.this, data, Toast.LENGTH_LONG).show();
+
+                separated = data.split(":");
+/*                for (int i=0;i<separated.length;i++){
+                    Toast.makeText(Pedido_Activity.this, separated.length+"", Toast.LENGTH_LONG).show();
+                }*/
+                Agregar a = new Agregar();
+                a.execute(message, "");
+            }
+        });
     }
     private void tareaLarga()
     {
@@ -254,9 +290,13 @@ public class Pedido_Activity extends AppCompatActivity {
         }
         public Boolean doInBackground(String... params) {
             httphandler handler = new httphandler();
-            txt2 = handler.poststatus("http://45.55.227.224/api/v1/order/changeReady", httpclient, params);
+
+            for (int i = 0; i < separated.length; i++) {
+                params[1]=separated[i];
+                txt2 = handler.poststatus("http://45.55.227.224/api/v1/order/changeReady", httpclient, params);
+            }
             sessionInfo=handler.sessionInfo;
-            tipousuario= params[1];
+            //tipousuario= params[1];
             try {
                 respJSON = new JSONObject(txt2);
 
@@ -268,29 +308,10 @@ public class Pedido_Activity extends AppCompatActivity {
 
         }
         public void onPostExecute(Boolean resul) {
-            busy=false;
+            /*busy=false;
             Toast toast = Toast.makeText(getApplicationContext(),"busy="+busy+ " reeload = "+reload , Toast.LENGTH_SHORT);
-            toast.show();
-            r = new Recargar();
-            r.execute();
-        }
-
-
-    }
-    public class Recargar extends AsyncTask<String,Integer,Boolean> {
-        public Boolean doInBackground(String... params) {
-
-            do {
-                tareaLarga();
-
-            }while (!reload&&busy);
-        return reload;
-        }
-        public void onPostExecute(Boolean resul) {
-            if (reload){
-                openact();
-            }
-
+            toast.show();*/
+            openact();
         }
 
 

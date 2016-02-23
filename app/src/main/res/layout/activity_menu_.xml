@@ -38,7 +38,7 @@
         android:id="@+id/button_add_pedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_navigation_check"
+        android:src="@drawable/ic_navigation_check"
         app:fabSize="normal"
         app:borderWidth="0dp"
         android:layout_alignParentBottom="true"

@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -31,12 +31,12 @@ public class AdaptadorPedido
         private TextView txtid;
         private TextView txtmeso;
         private TextView txtnum;
-        private CheckBox stat;
+        public CheckBox chkSelect;
         ImageView image;
         public pedidoViewHolder(View itemView) {
             super(itemView);
 
-            image = (ImageView) itemView.findViewById(R.id.button_marcar_listo);
+       //     image = (ImageView) itemView.findViewById(R.id.button_marcar_listo);
 
             txtnom = (TextView)itemView.findViewById(R.id.Lblnombre);
             //txtid = (TextView)itemView.findViewById(R.id.Lblid);
@@ -45,18 +45,19 @@ public class AdaptadorPedido
             //txtlim = (TextView)itemView.findViewById(R.id.Lbllimite);
             //clr = (CardView) itemView.findViewById(R.id.card1);
                     //findViewById(R.id.card1);
-
+            chkSelect = (CheckBox) itemView
+                    .findViewById(R.id.chkSelect);
         }
         CardView cardView= (CardView) itemView.findViewById(R.id.card1);
 
         public void bindpedido(pedidos t) {
 
-            image.setImageResource(R.drawable.ic_social_notifications_on_gray);
+//            image.setImageResource(R.drawable.ic_social_notifications_on_gray);
             txtnom.setText(t.getNombre());
 //            txtid.setText(t.getId());
             txtnum.setText(t.getNumeromesa().toString());
   //          txtmeso.setText(t.getMesonero());
-image.setId(Integer.parseInt(t.getId()));
+//image.setId(Integer.parseInt(t.getId()));
 /*            image.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -87,10 +88,25 @@ image.setId(Integer.parseInt(t.getId()));
     }
 
     @Override
-    public void onBindViewHolder(pedidoViewHolder viewHolder, int pos) {
+    public void onBindViewHolder(pedidoViewHolder viewHolder, final int pos) {
         pedidos item = datos.get(pos);
+        viewHolder.chkSelect.setChecked(datos.get(pos).isSelected());
+        //viewHolder.txtcant.setId(pos);
 
+        viewHolder.chkSelect.setTag(datos.get(pos));
         viewHolder.bindpedido(item);
+        viewHolder.chkSelect.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                CheckBox cb = (CheckBox) v;
+                pedidos contact = (pedidos) cb.getTag();
+                contact.setSelected(cb.isChecked());
+                datos.get(pos).setSelected(cb.isChecked());
+                Toast.makeText(
+                        v.getContext(),
+                        "Clicked on Checkbox: " + cb.getText() + " is "
+                                + cb.isChecked(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -106,5 +122,8 @@ image.setId(Integer.parseInt(t.getId()));
     public void onClick(View view) {
         if(listener != null)
             listener.onClick(view);
+    }
+    public ArrayList<pedidos> getPedidostist() {
+        return datos;
     }
 }

@@ -194,6 +194,15 @@ public class Sesion extends ActionBarActivity {
             intent.putExtra("json", txt);
             intent.putExtra("cookie",h);
             intent.putExtra("idusuario",idusuario);
+            SharedPreferences prefs =
+                    getSharedPreferences("usuario",Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("cookie_nombre", h.getName());
+            editor.putString("cookie_valor", h.getValue());
+            editor.putString("cookie_dominio", h.getDomain());
+            //editor.putString("nombre", "Prueba");
+            editor.commit();
             startActivity(intent);
             overridePendingTransition(R.anim.zoom_back_in, R.anim.zoom_back_out);
         }
@@ -205,7 +214,7 @@ public class Sesion extends ActionBarActivity {
                 Context.MODE_PRIVATE);
 
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-        Log.d(TAG, "R" + context);
+        Log.d(TAG, "R" + registrationId);
         if (registrationId.length() == 0) {
             Log.d(TAG, "Registro GCM no encontrado.");
             return "";

@@ -2,6 +2,7 @@ package com.example.pedro.tesisalpha;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -38,7 +39,7 @@ public class Mesas_Activity extends ActionBarActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     JSONObject respJSON;
     String txt = "Iniciando Sesion", txt1 = "cargando mesas", tipousuario = "";
-    public static final String EXTRA_MESSAGE = "message";
+    public final static String EXTRA_MESSAGE = "message";
     private static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final String PROPERTY_EXPIRATION_TIME = "onServerExpirationTimeMs";
@@ -110,6 +111,12 @@ public class Mesas_Activity extends ActionBarActivity {
                 final String n;
                 n = datos.get(posi).getTitulo();
                 Log.i(TAG, "n = "+n);
+                SharedPreferences prefs =
+                        getSharedPreferences("usuario", Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("mesa", n);
+                editor.commit();
                 openact(n);
 
             }
