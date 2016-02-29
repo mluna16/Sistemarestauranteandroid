@@ -1,7 +1,9 @@
 package com.example.pedro.tesisalpha;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,7 +51,8 @@ public class Mesas_Activity extends ActionBarActivity {
     static final String TAG = "GCMDemo";
     private Context context;
     private String regid;
-    private GoogleCloudMessaging gcm;    private ImageView imagen;
+    private GoogleCloudMessaging gcm;
+    private ImageView imagen;
     private Animation rotacion;
     boolean reload = false, busy = false, sw = true;
     private ArrayList<Titular> datos;
@@ -71,6 +74,9 @@ public class Mesas_Activity extends ActionBarActivity {
         l.setVisibility(View.VISIBLE);
         Mesas tarea = new Mesas();
         tarea.execute();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("actualizar");
+        registerReceiver(mBroadcast, filter);
     }
 
     public void cargado(int nmes) {
@@ -110,7 +116,7 @@ public class Mesas_Activity extends ActionBarActivity {
                 int posi = recView.getChildAdapterPosition(v);
                 final String n;
                 n = datos.get(posi).getTitulo();
-                Log.i(TAG, "n = "+n);
+                Log.i(TAG, "n = " + n);
                 SharedPreferences prefs =
                         getSharedPreferences("usuario", Context.MODE_PRIVATE);
 
@@ -159,6 +165,7 @@ public class Mesas_Activity extends ActionBarActivity {
         Intent i = getIntent();
         Intent intent = new Intent(this, MesaPedidoActivity.class);
         intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra("gcm", false);
         intent.putExtra("cookie", h);
         startActivity(intent);
 
@@ -170,6 +177,11 @@ public class Mesas_Activity extends ActionBarActivity {
         Intent intent = new Intent(this, Sesion.class);
         intent.putExtra(EXTRA_MESSAGE, message);
         intent.putExtra("cookie", h);
+        SharedPreferences prefs =
+                getSharedPreferences("usuario",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("sesion", false);
+        editor.commit();
         startActivity(intent);
 
     }
@@ -240,6 +252,7 @@ public class Mesas_Activity extends ActionBarActivity {
         JSONObject respJSON;
 
         protected void onPreExecute() {
+
         }
 
         public Boolean doInBackground(String... params) {
@@ -262,8 +275,7 @@ public class Mesas_Activity extends ActionBarActivity {
         public void onPostExecute(Boolean resul) {
             cargado(nmesas);
             if (resul) {
-                Recargar r = new Recargar();
-                r.execute();
+
             }
             LinearLayout l = (LinearLayout) findViewById(R.id.ocultomain);
             l.setVisibility(View.INVISIBLE);
@@ -273,56 +285,16 @@ public class Mesas_Activity extends ActionBarActivity {
 
 
     }
+    BroadcastReceiver mBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
 
-    public class Recargar extends AsyncTask<String, Integer, Boolean> {
-        public Boolean doInBackground(String... params) {
-            if (sw) {
-                do {
-                    tareaLarga();
+            if(intent.getAction().equals("actualizar")){
+                String x=intent.getExtras().getString("mesa");
+                Toast.makeText(getBaseContext(), x, Toast.LENGTH_LONG).show();
 
-                } while (!reload);
             }
-            return reload;
         }
+    };
 
-        public void onPostExecute(Boolean resul) {
-            if (reload) {
-                recarga();
-            }
-
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        sw = true;
-        Recargar r = new Recargar();
-        r.execute();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        sw = false;
-    }
-
-    private void recarga() {
-
-        Toast toast = Toast.makeText(getApplicationContext(), "recargando", Toast.LENGTH_SHORT);
-        toast.show();
-        Mesas p = new Mesas();
-        p.execute();
-        reload = false;
-        Recargar r = new Recargar();
-        r.execute();
-    }
-
-    private void tareaLarga() {
-        try {
-            Thread.sleep(5000);
-            reload = true;
-        } catch (InterruptedException e) {
-        }
-    }
 }

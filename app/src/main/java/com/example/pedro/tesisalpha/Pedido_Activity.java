@@ -1,21 +1,24 @@
 package com.example.pedro.tesisalpha;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -34,6 +37,8 @@ public class Pedido_Activity extends AppCompatActivity {
     public final static String EXTRA_CANTIDAD="cantidad";
     String[] separated;
     Cookie sessionInfo;
+    private Parcelable recyclerViewState;
+    AdaptadorPedido adaptador;
     boolean reload=false, busy=true, sw=true;
     private static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -42,6 +47,7 @@ public class Pedido_Activity extends AppCompatActivity {
     public static final long EXPIRATION_TIME_MS = 1000 * 3600 * 24 * 7;
     String SENDER_ID = "373000797222";
     static final String TAG = "GCMDemo";
+    String data="";
     String idusuario="";
     private String regid;
     private GoogleCloudMessaging gcm;
@@ -78,11 +84,14 @@ public class Pedido_Activity extends AppCompatActivity {
         p.execute();
         LinearLayout l = (LinearLayout) findViewById(R.id.ocultococina);
         l.setVisibility(View.VISIBLE);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("actualizar");
+        registerReceiver(mBroadcast, filter);
 
     }
     public void openact() {
-        Toast toast = Toast.makeText(getApplicationContext(),"recargando" , Toast.LENGTH_SHORT);
-        toast.show();
+        /*Toast toast = Toast.makeText(getApplicationContext(),"recargando" , Toast.LENGTH_SHORT);
+        toast.show();*/
 /*        httpcookies h = new httpcookies(sessionInfo);
         Intent intent = new Intent(this, Pedido_Activity.class);
         intent.putExtra(EXTRA_MESSAGE, message);
@@ -90,6 +99,20 @@ public class Pedido_Activity extends AppCompatActivity {
         startActivity(intent);*/
         productos p = new productos();
         p.execute();
+    }
+    public void openact2(String message) {
+        httpcookies h = new httpcookies(sessionInfo);
+        Intent i = getIntent();
+        Intent intent = new Intent(this, Sesion.class);
+        intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra("cookie", h);
+        SharedPreferences prefs =
+                getSharedPreferences("usuario",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("sesion", false);
+        editor.commit();
+        startActivity(intent);
+
     }
     public void onResume(){
         super.onResume();
@@ -117,14 +140,54 @@ public class Pedido_Activity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_cerrar) {
+            sesion tarea = new sesion();
+            tarea.execute();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+    public class sesion extends AsyncTask<String, Integer, Boolean> {
+        String txt = "Cerrando Sesión";
+        JSONObject respJSON;
+
+        protected void onPreExecute() {
+
+            LinearLayout l = (LinearLayout) findViewById(R.id.ocultococina);
+            l.setVisibility(View.VISIBLE);
+        }
+
+        public Boolean doInBackground(String... params) {
+            httphandler handler = new httphandler();
+            txt = handler.get("http://45.55.227.224/api/v1/logout", httpclient);
+            sessionInfo = handler.sessionInfo;
+            try {
+                respJSON = new JSONObject(txt);
+                JSONObject data = respJSON.getJSONObject("data");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return handler.sw;
+
+        }
+
+        public void onPostExecute(Boolean resul) {
+            openact2("");
+
+            LinearLayout l = (LinearLayout) findViewById(R.id.ocultococina);
+            l.setVisibility(View.INVISIBLE);
+
+        }
+
+
     }
     public class productos extends AsyncTask<String,Integer,Boolean> {
         String txt="Cargando Mesas",tipousuario="";
         JSONObject respJSON;
         public void onPreExecute(){
-            busy=true;
+            //busy=true;
         }
         public Boolean doInBackground(String... params) {
             httphandler handler = new httphandler();
@@ -141,6 +204,7 @@ public class Pedido_Activity extends AppCompatActivity {
         }
         public void onPostExecute(Boolean resul) {
             cargado();
+
             busy=false;
             LinearLayout l = (LinearLayout) findViewById(R.id.ocultococina);
             l.setVisibility(View.INVISIBLE);
@@ -151,137 +215,95 @@ public class Pedido_Activity extends AppCompatActivity {
 
     void cargado() {
         //TextView txttitulo= (TextView) findViewById(R.id.txt1);
+        llenar();
+            recView = (RecyclerView) findViewById(R.id.RecView);
+            //recView.setHasFixedSize(true);
+
+            adaptador = new AdaptadorPedido(datos);
+
+            recView.setAdapter(adaptador);
+
+            recView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+            //recView.setLayoutManager(new GridLayoutManager(this,2));
+
+        /* recView.addItemDecoration(
+                 new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+*/
+            recView.setItemAnimator(new DefaultItemAnimator());
+            btnok = (ImageView)findViewById(R.id.button_listo);
+            btnok.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+   /*             btnok.refreshDrawableState();
+                Animation logoMoveAnimation = AnimationUtils.loadAnimation(context, R.anim.rotar2);
+                btnok.startAnimation(logoMoveAnimation);*/
+                    seleccionados();
+/*                    for (int i = 0; i < separated.length; i++) {
+                        Log.i(TAG, "onClick "+separated[i]);
+                        Toast.makeText(Pedido_Activity.this, separated.length + "", Toast.LENGTH_LONG).show();
+                    }*/
+                    Agregar a = new Agregar();
+                    a.execute(message, "");
+                }
+            });
+
+            //Toast.makeText(getBaseContext(),"recargar",Toast.LENGTH_LONG).show();
+            //adaptador.notifyDataSetChanged();
+        /*if(!busy) {
+            recView.getLayoutManager().onRestoreInstanceState(recyclerViewState);//restore
+        }*/
+    }
+
+    private void seleccionados() {
+        data = "";
+        ArrayList<pedidos> stlist = ((AdaptadorPedido) adaptador)
+                .getPedidostist();
+        for (int i = 0; i < stlist.size(); i++) {
+            pedidos seleccion = stlist.get(i);
+            if (seleccion.isSelected() == true) {
+                String a =seleccion.getNombre();
+                String b =seleccion.getId();
+                if ((stlist.size()-1)==i){
+                    data=data+b;
+                }else {
+                    data=data+b+":";
+                }
+
+
+                //data = data + "\n" + seleccion.getNombre().toString() + " " + seleccion.getCantidad();
+            }
+        }
+        //Toast.makeText(Pedido_Activity.this, data, Toast.LENGTH_LONG).show();
+
+        separated = data.split(":");
+    }
+
+    private void llenar() {
+        int j=0;
 
         datos = new ArrayList<pedidos>();
         for(int i=0; i<productos.length(); i++){
             try {
                 JSONObject jsonObject = productos.getJSONObject(i);
-                datos.add(new pedidos(jsonObject.getString("idOrder"),jsonObject.getString("nombrePlato"),jsonObject.getInt("mesa"),jsonObject.getString("mesonero"),"Pendiente",false));
+
+                datos.add(new pedidos(jsonObject.getString("idOrder"),
+                        jsonObject.getString("nombrePlato"),
+                        jsonObject.getInt("mesa"),
+                        jsonObject.getString("mesonero"),
+                        "Pendiente",
+                        false));
+
 // "Descripcion " + jsonObject.getString("description")
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        recView = (RecyclerView) findViewById(R.id.RecView);
-        //recView.setHasFixedSize(true);
-
-        final AdaptadorPedido adaptador = new AdaptadorPedido(datos);
 
 
-
-
-/*                adaptador.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        r.cancel(true);
-                        *//*
-                        i.refreshDrawableState();*//*
-
-                            Log.i("DemoRecView", "Pulsado el elemento " + (recView.getChildPosition(v) + 1));
-                            int posi = recView.getChildAdapterPosition(v);
-                            final String n;
-
-                            n = datos.get(posi).getId();
-
-                            AlertDialog.Builder builder1 = new AlertDialog.Builder(Pedido_Activity.this);
-                        TextView t;
-                        t = (TextView) v.findViewById(R.id.Lblnombre);
-                        final ImageView image = (ImageView) v.findViewById(Integer.parseInt(n));
-                        image.setImageResource(R.drawable.ic_social_notifications_on);
-
-
-                            builder1.setMessage("Marcar como listo pedido: "+t.getText());
-                            builder1.setCancelable(true);
-                            builder1.setPositiveButton("Si",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Log.i("DemoRecView", "IdOrder " + n);
-
-
-                                            image.refreshDrawableState();
-                                            Animation logoMoveAnimation = AnimationUtils.loadAnimation(context, R.anim.rotar2);
-                                            image.startAnimation(logoMoveAnimation);
-                                            Agregar a = new Agregar();
-                                            a.execute(message, n);
-
-                                        }
-                                    });
-                            builder1.setNegativeButton("No",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                            image.setImageResource(R.drawable.ic_social_notifications_on_gray);
-                                            busy=false;
-                                            r = new Recargar();
-                                            r.execute();
-                                        }
-                                    });
-
-                            AlertDialog alert11 = builder1.create();
-                            alert11.show();
-
-                        *//*Log.i("DemoRecView", "Pulsado el elemento " + (recView.getChildPosition(v) + 1));
-                        //openact(recView.getChildPosition(v));
-                        *//*
-                    }
-                });*/
-
-        recView.setAdapter(adaptador);
-
-        recView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        //recView.setLayoutManager(new GridLayoutManager(this,2));
-
-        /* recView.addItemDecoration(
-                 new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
-*/
-        recView.setItemAnimator(new DefaultItemAnimator());
-        btnok = (ImageView)findViewById(R.id.button_listo);
-        btnok.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                String CurrentString = "Fruit: they taste good";
-
-   /*             btnok.refreshDrawableState();
-                Animation logoMoveAnimation = AnimationUtils.loadAnimation(context, R.anim.rotar2);
-                btnok.startAnimation(logoMoveAnimation);*/
-                String data = "";
-                ArrayList<pedidos> stlist = ((AdaptadorPedido) adaptador)
-                        .getPedidostist();
-                for (int i = 0; i < stlist.size(); i++) {
-                    pedidos seleccion = stlist.get(i);
-                    if (seleccion.isSelected() == true) {
-                        String a =seleccion.getNombre();
-                        String b =seleccion.getId();
-                        if ((stlist.size()-1)==i){
-                            data=data+b;
-                        }else {
-                            data=data+b+":";
-                        }
-
-
-                        //data = data + "\n" + seleccion.getNombre().toString() + " " + seleccion.getCantidad();
-                    }
-                }
-                //Toast.makeText(Pedido_Activity.this, data, Toast.LENGTH_LONG).show();
-
-                separated = data.split(":");
-/*                for (int i=0;i<separated.length;i++){
-                    Toast.makeText(Pedido_Activity.this, separated.length+"", Toast.LENGTH_LONG).show();
-                }*/
-                Agregar a = new Agregar();
-                a.execute(message, "");
-            }
-        });
     }
-    private void tareaLarga()
-    {
-        try {
-            Thread.sleep(5000);
-            reload=true;
-        } catch(InterruptedException e) {}
-    }
+
     public class Agregar extends AsyncTask<String,Integer,Boolean> {
         String txt2="Cargando Mesas",tipousuario="";
         JSONObject respJSON;
@@ -292,7 +314,9 @@ public class Pedido_Activity extends AppCompatActivity {
             httphandler handler = new httphandler();
 
             for (int i = 0; i < separated.length; i++) {
+                //Log.i(TAG, separated[i]);
                 params[1]=separated[i];
+                Log.i("idorder", separated[i]);
                 txt2 = handler.poststatus("http://45.55.227.224/api/v1/order/changeReady", httpclient, params);
             }
             sessionInfo=handler.sessionInfo;
@@ -316,5 +340,71 @@ public class Pedido_Activity extends AppCompatActivity {
 
 
     }
+    void remover(String nOrder){
+        ArrayList<pedidos> stlist = ((AdaptadorPedido) adaptador)
+                .getPedidostist();
+        for (int i = 0; i < stlist.size(); i++) {
+            pedidos seleccion = stlist.get(i);
+            if (seleccion.getId().equals(nOrder)) {
+                datos.remove(i);
+                adaptador.notifyItemRemoved(i);
+            }
+        }
+    }
+    void agregar(String nOrder, String nMesa, String parc){
+        boolean found=false;
+        ArrayList<pedidos> stlist = ((AdaptadorPedido) adaptador)
+                .getPedidostist();
+        for (int i = 0; i < stlist.size(); i++) {
+            pedidos seleccion = stlist.get(i);
+            if (seleccion.getId().equals(nOrder)) {
+                found=true;
 
+            }
+        }
+        if (!found){
+
+            Log.i(TAG, "prueba "+ parc);
+            datos.add(new pedidos(nOrder,
+                    parc,
+                    Integer.parseInt(nMesa),
+                    "",
+                    "Pendiente",
+                    false));
+            //datos.add(1, new Titular("Nuevo titular", "Subtitulo nuevo titular"));
+            adaptador.notifyItemInserted(datos.size());
+        }
+
+    }
+    BroadcastReceiver mBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+
+            if(intent.getAction().equals("actualizar")){
+                String x=intent.getStringExtra("accion");
+                if (x.equals("eliminar")||x.equals("devolver")||x.equals("remover")){
+                    remover(intent.getStringExtra("idorder"));
+                }else {
+                    if(x.equals("agregar")){
+
+                        String par[]=intent.getStringExtra("hobb").split(": ");
+                        String parc=par[1];
+                        agregar(intent.getStringExtra("idorder"),intent.getStringExtra("mesa"),parc);
+                        //datos.add(1, new Titular("Nuevo titular", "Subtitulo nuevo titular"));
+                        //adaptador.notifyItemInserted(1);
+                    }else{
+                        if(x.equals("editar")){
+
+                        }
+                    }
+                }
+
+            }
+            /*seleccionados();
+                recyclerViewState = recView.getLayoutManager().onSaveInstanceState();//save
+                productos p = new productos();
+                p.execute();
+                Toast.makeText(getBaseContext(),intent.getExtras().getString("nombre"),Toast.LENGTH_LONG).show();*/
+        }
+    };
 }

@@ -94,8 +94,7 @@ public class Sesion extends ActionBarActivity {
                 tarea.execute(
                         txtEmail.getText().toString(),
                         txtPassword.getText().toString());
-    LinearLayout l = (LinearLayout) findViewById(R.id.oculto);
-    l.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -131,7 +130,8 @@ public class Sesion extends ActionBarActivity {
         JSONObject respJSON;
         @Override
         protected void onPreExecute() {
-
+            LinearLayout l = (LinearLayout) findViewById(R.id.oculto);
+            l.setVisibility(View.VISIBLE);
         }
         public Boolean doInBackground(String... params) {
 
@@ -159,13 +159,13 @@ public class Sesion extends ActionBarActivity {
         }
 
         public void onPostExecute(Boolean resul ){
-
+            LinearLayout l = (LinearLayout) findViewById(R.id.oculto);
+            l.setVisibility(View.INVISIBLE);
                 if (!resul){
                     //Toast toast = Toast.makeText(getApplicationContext(),"verifique su conexion a internet" , Toast.LENGTH_SHORT);
                     Toast toast = Toast.makeText(getApplicationContext(),txt , Toast.LENGTH_SHORT);
                     toast.show();
-                    LinearLayout l = (LinearLayout) findViewById(R.id.oculto);
-                    l.setVisibility(View.INVISIBLE);
+
                 }
 
             Intent intent = null;
@@ -201,7 +201,9 @@ public class Sesion extends ActionBarActivity {
             editor.putString("cookie_nombre", h.getName());
             editor.putString("cookie_valor", h.getValue());
             editor.putString("cookie_dominio", h.getDomain());
-            //editor.putString("nombre", "Prueba");
+            editor.putString("tipousuario", tipousuario);
+            editor.putString("idusuario", idusuario);
+            editor.putBoolean("sesion", true);
             editor.commit();
             startActivity(intent);
             overridePendingTransition(R.anim.zoom_back_in, R.anim.zoom_back_out);
@@ -324,7 +326,7 @@ public class Sesion extends ActionBarActivity {
         httphandler handler = new httphandler();
         txt = handler.postgcm("http://45.55.227.224/api/v1/user/code", httpclient, idusuario, regId);
 
-        if (txt.equals("1")){
+        if (txt.equals("")){
             Log.d(TAG, "Registrado en mi servidor.");
             reg = true;
         }else {

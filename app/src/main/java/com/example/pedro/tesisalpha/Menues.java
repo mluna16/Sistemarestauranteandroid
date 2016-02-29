@@ -53,7 +53,9 @@ public class Menues {
     public void setCantidad(int can) {
         this.cantidad = can;
     }
-
+    public void setLimite(int lim) {
+        this.limite = lim;
+    }
 }
 
 

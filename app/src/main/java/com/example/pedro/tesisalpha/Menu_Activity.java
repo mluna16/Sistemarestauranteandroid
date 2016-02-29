@@ -1,8 +1,13 @@
 package com.example.pedro.tesisalpha;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +22,6 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -35,7 +39,9 @@ public class Menu_Activity extends ActionBarActivity {
     private ViewGroup linearLayoutDetails;
     private ImageView imageViewExpand;
     private static final int DURATION = 250;
+    AdaptadorMenu adaptador;
     int max=0;
+    String data;
     Cookie sessionInfo;
     DefaultHttpClient httpclient = new DefaultHttpClient();
     JSONArray productos;
@@ -45,8 +51,9 @@ public class Menu_Activity extends ActionBarActivity {
     String message,plato,cantidad;
     private ImageView btnok;
     Boolean sw=false;
-    String[][] genera;
-
+    String[] ncantidad;
+    String[] nproducto;
+    private Parcelable recyclerViewState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +65,27 @@ public class Menu_Activity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent i = getIntent();
         message=i.getStringExtra(MesaPedidoActivity.EXTRA_MESSAGE);
-        httpcookies objcookie = (httpcookies)i.getSerializableExtra("cookie");
+        /*httpcookies objcookie = (httpcookies)i.getSerializableExtra("cookie");
         BasicClientCookie newCookie = new BasicClientCookie(objcookie.getName(),objcookie.getValue());
-        newCookie.setDomain(objcookie.getDomain());
+        newCookie.setDomain(objcookie.getDomain());*/
+        SharedPreferences prefs = getSharedPreferences(
+                "usuario",
+                Context.MODE_PRIVATE);
+        String cookienombre = prefs.getString("cookie_nombre", "") ;
+        String cookievalor = prefs.getString("cookie_valor", "") ;
+        String cookiedominio = prefs.getString("cookie_dominio", "") ;
+        BasicClientCookie newCookie = new BasicClientCookie(cookienombre,cookievalor);
+        newCookie.setDomain(cookiedominio);
+        //message  = prefs.getString("mesa", i.getStringExtra(EXTRA_MESSAGE));
+        message  = i.getStringExtra(EXTRA_MESSAGE);
         httpclient.getCookieStore().addCookie(newCookie);
         productos p = new productos();
         p.execute();
         LinearLayout l = (LinearLayout) findViewById(R.id.ocultomenu);
         l.setVisibility(View.VISIBLE);
-
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("actualizar");
+        registerReceiver(mBroadcast, filter);
     }
 
     public void openact() {
@@ -75,6 +94,7 @@ public class Menu_Activity extends ActionBarActivity {
         httpcookies h = new httpcookies(sessionInfo);
         Intent intent = new Intent(this, MesaPedidoActivity.class);
         intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra("gcm", false);
         intent.putExtra("cookie",h);
         startActivity(intent);
     }
@@ -146,7 +166,7 @@ public class Menu_Activity extends ActionBarActivity {
         recView = (RecyclerView) findViewById(R.id.RecView);
        // recView.setHasFixedSize(true);
 
-        final AdaptadorMenu adaptador = new AdaptadorMenu(datos);
+        adaptador = new AdaptadorMenu(datos);
 
 
         adaptador.setOnClickListener(new View.OnClickListener() {
@@ -180,23 +200,51 @@ public class Menu_Activity extends ActionBarActivity {
         recView.setItemAnimator(new DefaultItemAnimator());
         btnok = (ImageView)findViewById(R.id.button_add_pedido);
 
-        genera = new String[adaptador.getItemCount()][2];
+
         btnok.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String data = "";
-                ArrayList<Menues> stlist = ((AdaptadorMenu) adaptador)
-                        .getMenuestist();
-int j=0;
-                for (int i = 0; i < stlist.size(); i++) {
-                    Menues seleccion = stlist.get(i);
-                    if (seleccion.isSelected() == true) {
-                        genera[j][0]= seleccion.getCantidad().toString();
-                        genera[j][1]= seleccion.getId();
-                        Toast.makeText(Menu_Activity.this, "\n" + message+ " cant " + genera[j][0] + " id " + genera[j][1], Toast.LENGTH_LONG).show();
-                        j++;
-                        //data = data + "\n" + seleccion.getNombre().toString() + " " + seleccion.getCantidad();
+
+                seleccionados();
+                for (int i=0;i<ncantidad.length;i++){
+                    //for (int j=0;j<genera[i].length;j++){
+                        Log.i("genera", "cant= "+ncantidad[i]+" id= "+nproducto[i]);
+                    //}
+                }
+                Agregar a = new Agregar();
+                a.execute(
+                        message,
+                        "",
+                        ""
+                );
+
+            }
+        });
+    }
+    private void seleccionados(){
+        data = "";
+        String alfa="",beta="";
+        ArrayList<Menues> stlist = ((AdaptadorMenu) adaptador)
+                .getMenuestist();
+        int j=0;
+
+        for (int i = 0; i < stlist.size(); i++) {
+            Menues seleccion = stlist.get(i);
+            if (seleccion.isSelected() == true) {
+                String a= seleccion.getCantidad().toString();//cantidad
+                String b= seleccion.getId();//idproducto
+                if ((stlist.size()-1)==i){
+                    alfa=alfa+a;
+                    beta=beta+b;
+                }else {
+                    alfa=alfa+a+":";
+                    beta=beta+b+":";
+                }
+
+                //Toast.makeText(Menu_Activity.this, "\n" + message+ " cant " + genera[j][0] + " id " + genera[j][1], Toast.LENGTH_LONG).show();
+                j++;
+                //data = data + "\n" + seleccion.getNombre().toString() + " " + seleccion.getCantidad();
 						/*
 						 * Toast.makeText( CardViewActivity.this, " " +
 						 * singleStudent.getName() + " " +
@@ -208,31 +256,28 @@ int j=0;
 						 * 2,0 2,1
 						 *
 						 */
-
-                    }
-
-                }
-
-                Agregar a = new Agregar();
-                a.execute(
-                        message,
-                        "",
-                        ""
-                );
-
             }
-        });
+
+        }
+        Log.i("selecc", "seleccionados ");
+        ncantidad = alfa.split(":");
+        nproducto = beta.split(":");
+
     }
     public class Agregar extends AsyncTask<String,Integer,Boolean> {
         String trx="",txt2="Cargando Mesas",tipousuario="";
         JSONObject respJSON;
+        protected void onPreExecute() {
+            LinearLayout l = (LinearLayout) findViewById(R.id.ocultomenu);
+            l.setVisibility(View.VISIBLE);
+        }
         public Boolean doInBackground(String... params) {
             httphandler handler = new httphandler();
             httphandler handler1 = new httphandler();
-            for (int i = 0; i < genera.length; i++) {
+            for (int i = 0; i < ncantidad.length; i++) {
               /*  */
-                    params[1]=genera[i][1];
-                    params[2]=genera[i][0];
+                    params[1]=nproducto[i];
+                    params[2]=ncantidad[i];
                     txt2 = handler.postpedido("http://45.55.227.224/api/v1/order/store", httpclient, params);
                     //trx = handler1.get("http://45.55.227.224/api/v1/user/send", httpclient);
                     sessionInfo = handler.sessionInfo;
@@ -241,9 +286,8 @@ int j=0;
 
         }
         public void onPostExecute(Boolean resul) {
-
-            Toast toast = Toast.makeText(getApplicationContext(), txt2, Toast.LENGTH_SHORT);
-            toast.show();
+            LinearLayout l = (LinearLayout) findViewById(R.id.ocultomenu);
+            l.setVisibility(View.INVISIBLE);
             openact();
 
         }
@@ -273,4 +317,55 @@ int j=0;
 
         return super.onOptionsItemSelected(item);
     }
+    void agregar(String idproduct, String nMesa, String parc){
+        //String[] res= parc.split(": ");
+        ArrayList<Menues> stlist = ((AdaptadorMenu) adaptador)
+                .getMenuestist();
+        for (int i = 0; i < stlist.size(); i++) {
+            Menues seleccion = stlist.get(i);
+            if (seleccion.getId().equals(idproduct)) {
+                seleccion.setLimite(seleccion.getLimite() - 1);
+                Log.i("agregar", seleccion.getNombre()+"new lim "+seleccion.getLimite()+" "+parc);
+                if ((seleccion.getLimite()-1)>0){
+                    datos.set(i,seleccion);
+                    adaptador.notifyItemChanged(i);
+                }else {
+                    datos.remove(i);
+                    adaptador.notifyItemRemoved(i);
+                }
+
+            }
+        }
+    }
+    BroadcastReceiver mBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+
+            if(intent.getAction().equals("actualizar")){
+                String x=intent.getStringExtra("accion");
+                if (x.equals("eliminar")||x.equals("devolver")||x.equals("remover")){
+                    //remover(intent.getStringExtra("idorder"));
+                }else {
+                    if(x.equals("agregar")){
+                        SharedPreferences prefs = getSharedPreferences(
+                                "usuario",
+                                Context.MODE_PRIVATE);
+                        String nombre = prefs.getString("idusuario", "") ;
+                        //if (!intent.getStringExtra("iduser").equals(nombre)){
+                            agregar(intent.getStringExtra("idproduct"),intent.getStringExtra("mesa"),intent.getStringExtra("idorder"));
+                        //}
+                    }else{
+                        if(x.equals("editar")){
+
+                        }
+                    }
+                }
+/*                seleccionados();
+                recyclerViewState = recView.getLayoutManager().onSaveInstanceState();//save
+                productos p = new productos();
+                p.execute();
+                Toast.makeText(getBaseContext(),intent.getExtras().getString("nombre"),Toast.LENGTH_LONG).show();*/
+            }
+        }
+    };
 }

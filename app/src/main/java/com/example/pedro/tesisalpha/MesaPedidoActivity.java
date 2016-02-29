@@ -49,7 +49,7 @@ public class MesaPedidoActivity extends ActionBarActivity {
     JSONArray pedidos;
     ArrayList<Mesas> datos;
     private RecyclerView recView;
-
+    AdaptadorMesa adaptador;
     @Override
 
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +68,7 @@ public class MesaPedidoActivity extends ActionBarActivity {
         /*httpcookies objcookie = (httpcookies)i.getSerializableExtra("cookie");
         BasicClientCookie newCookie = new BasicClientCookie(objcookie.getName(),objcookie.getValue());
         newCookie.setDomain(objcookie.getDomain());*/
+
         SharedPreferences prefs = getSharedPreferences(
                 "usuario",
                 Context.MODE_PRIVATE);
@@ -79,10 +80,16 @@ public class MesaPedidoActivity extends ActionBarActivity {
         httpclient.getCookieStore().addCookie(newCookie);
         // Get the message from the intent
 
+        //if (i.getBooleanExtra("gcm", false)){
+            message = i.getStringExtra(EXTRA_MESSAGE);
+        /*}else {
+            message= i.getStringExtra("mesa");
+            //message  = prefs.getString("mesa", i.getStringExtra("mesa"));
+        }*/
 
-        message  = prefs.getString("mesa", i.getStringExtra(EXTRA_MESSAGE));
 
-        //message = i.getStringExtra(EXTRA_MESSAGE);
+        //
+//        Log.i("message", message);
         /*plato = i.getStringExtra(Menu_Activity.EXTRA_PLATILLO);
         cantidad = i.getStringExtra(Menu_Activity.EXTRA_CANTIDAD);
 */
@@ -109,23 +116,12 @@ public class MesaPedidoActivity extends ActionBarActivity {
         filter.addAction("eliminar");
         filter.addAction("editar");
         filter.addAction("devolver");
-            registerReceiver(mBroadcast, filter);
+        filter.addAction("actualizar");
+        registerReceiver(mBroadcast, filter);
 
 
 
 
-    }
-    @Override
-    public void onResume(){
-        super.onResume();
-        sw=true;
-        Recargar r = new Recargar();
-        r.execute();
-    }
-    @Override
-    public void onPause(){
-        super.onPause();
-        sw=false;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,7 +147,7 @@ public class MesaPedidoActivity extends ActionBarActivity {
         int id = item.getItemId();
         if(id == android.R.id.home){
             httpcookies h = new httpcookies(sessionInfo);
-            Intent intent = new Intent(this, MesasActivity.class);
+            Intent intent = new Intent(this, Mesas_Activity.class);
             intent.putExtra(EXTRA_MESSAGE, message);
             intent.putExtra("cookie",h);
             startActivity(intent);
@@ -269,7 +265,11 @@ public class MesaPedidoActivity extends ActionBarActivity {
         for(int i=0; i<pedidos.length(); i++){
             try {
                 JSONObject jsonObject = pedidos.getJSONObject(i);
-                datos.add(new Mesas(jsonObject.getString("OrderId"),jsonObject.getString("ProductId"),jsonObject.getString("ProductName"),jsonObject.getDouble("ProductCost"),jsonObject.getString("OrderState")));
+                datos.add(new Mesas(jsonObject.getString("OrderId"),
+                        jsonObject.getString("ProductId"),
+                        jsonObject.getString("ProductName"),
+                        jsonObject.getDouble("ProductCost"),
+                        jsonObject.getString("OrderState")));
 // "Descripcion " + jsonObject.getString("description")
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -279,7 +279,7 @@ public class MesaPedidoActivity extends ActionBarActivity {
         recView = (RecyclerView) findViewById(R.id.RecViewmesa);
   //      recView.setHasFixedSize(true);
 //
-        final AdaptadorMesa adaptador = new AdaptadorMesa(datos,getApplicationContext());
+        adaptador = new AdaptadorMesa(datos,getApplicationContext());
 
         adaptador.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,36 +412,7 @@ public class MesaPedidoActivity extends ActionBarActivity {
 
 
     }
-    public class Recargar extends AsyncTask<String,Integer,Boolean> {
-        public Boolean doInBackground(String... params) {
-        if(sw){
-            do {
-                tareaLarga();
 
-            }while (!reload&&busy);}
-            return reload;
-
-        }
-        public void onPostExecute(Boolean resul) {
-            if (reload){
-                recarga();
-            }
-
-        }
-
-
-    }
-
-    private void recarga() {
-
-        Toast toast = Toast.makeText(getApplicationContext(),"recargando" , Toast.LENGTH_SHORT);
-        toast.show();
-        pedido p = new pedido();
-        p.execute();
-        reload=false;
-        Recargar r = new Recargar();
-        r.execute();
-    }
     public void openact2(String menssage,String message1,String message2) {
         httpcookies h = new httpcookies(sessionInfo);
         Intent i = getIntent();
@@ -454,12 +425,7 @@ public class MesaPedidoActivity extends ActionBarActivity {
         startActivity(intent);
 
     }
-    private void tareaLarga() {
-        try {
-            Thread.sleep(5000);
-            reload=true;
-        } catch(InterruptedException e) {}
-    }
+
     BroadcastReceiver mBroadcast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, final Intent intent) {
@@ -467,6 +433,77 @@ public class MesaPedidoActivity extends ActionBarActivity {
 
 
             switch (intent.getAction()){
+                case ("actualizar"):{
+
+                    if (message.equals(intent.getExtras().getString("mesa"))){
+                        //Toast.makeText(getBaseContext(),"actualizar" + intent.getExtras().getString("nombre"),Toast.LENGTH_LONG).show();
+                        String x=intent.getStringExtra("accion");
+                        if(x.equals("eliminar")){
+
+                                ArrayList<Mesas> stlist = ((AdaptadorMesa) adaptador)
+                                        .getMesastist();
+                                for (int i = 0; i < stlist.size(); i++) {
+                                    Mesas seleccion = stlist.get(i);
+                                    if (seleccion.getIdorder().equals(intent.getStringExtra("idorder"))) {
+                                        datos.remove(i);
+                                        adaptador.notifyItemRemoved(i);
+
+                                    }
+                                }
+                        }else {
+                            if (x.equals("agregar")){
+                                String parc=intent.getStringExtra("hobb");
+                                String[] res= parc.split(": ");
+                                //Log.i("parc", intent.getStringExtra("idorder"), intent.getStringExtra("idproduct"), res[1], Double.parseDouble(intent.getStringExtra("costproduct")), "espera"));
+
+                                datos.add(new Mesas(intent.getStringExtra("idorder"),
+                                        intent.getStringExtra("idproduct"),
+                                        res[1],
+                                        Double.parseDouble(intent.getStringExtra("costproduct")),
+                                        "espera"));
+
+                                adaptador.notifyItemInserted(datos.size());
+                            }else {
+                                if (x.equals("editar")){
+
+                                }else {
+                                    if (x.equals("remover")){
+                                        ArrayList<Mesas> stlist = ((AdaptadorMesa) adaptador)
+                                                .getMesastist();
+                                        for (int i = 0; i < stlist.size(); i++) {
+                                            Mesas seleccion = stlist.get(i);
+                                            if (seleccion.getIdorder().equals(intent.getStringExtra("idorder"))) {
+
+                                                seleccion.status="listo";
+                                                datos.set(i,seleccion);
+                                                adaptador.notifyItemChanged(i);
+
+
+                                            }
+                                        }
+                                    }else{
+                                        if (x.equals("devolver")){
+                                            ArrayList<Mesas> stlist = ((AdaptadorMesa) adaptador)
+                                                    .getMesastist();
+                                            for (int i = 0; i < stlist.size(); i++) {
+                                                Mesas seleccion = stlist.get(i);
+                                                if (seleccion.getIdorder().equals(intent.getStringExtra("idorder"))) {
+
+                                                    seleccion.status="devuelto";
+                                                    datos.set(i,seleccion);
+                                                    adaptador.notifyItemChanged(i);
+
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
                 case ("editar"):{
                     Toast.makeText(getBaseContext(),"editar" + intent.getExtras().getString("nombre"),Toast.LENGTH_LONG).show();
                     break;

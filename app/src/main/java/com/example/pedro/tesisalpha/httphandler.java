@@ -36,13 +36,46 @@ Boolean sw=true;
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 /*            params.add(new BasicNameValuePair("password",param[1]));
             params.add(new BasicNameValuePair("email",param[0]));*/
-            if (param[0].equals("1")){
-                params.add(new BasicNameValuePair("email","cocina@luna.com"));
-                params.add(new BasicNameValuePair("password","12345"));
-            }else {
-                params.add(new BasicNameValuePair("email","mesonero@luna.com"));
-                params.add(new BasicNameValuePair("password","12345"));
+            switch (param[0]){
+                case "0":{
+                    params.add(new BasicNameValuePair("email","cAnderson@hotmail.com"));
+                    params.add(new BasicNameValuePair("password","12345"));
+                    break;
+                }
+                case "1":{
+                    params.add(new BasicNameValuePair("email","Andre.DAmore@gmail.com"));
+                    params.add(new BasicNameValuePair("password","12345"));
+                    break;
+                }
+                case "2":{
+                    params.add(new BasicNameValuePair("email","mesonero@luna.com"));
+                    params.add(new BasicNameValuePair("password","12345"));
+
+                    break;
+                }
+                case "3":{
+                    params.add(new BasicNameValuePair("email","Joey.Spencer@hotmail.com"));
+                    params.add(new BasicNameValuePair("password","12345"));
+
+                    break;
+                }
+                case "4":{
+                    params.add(new BasicNameValuePair("email","Holly89@Steuber.com"));
+                    params.add(new BasicNameValuePair("password","12345"));
+
+                    break;
+                }
+                default:{
+                    params.add(new BasicNameValuePair("email","cocina@luna.com"));
+                    params.add(new BasicNameValuePair("password","12345"));
+
+                }
             }
+         /*   if (param[0].equals("1")){
+
+            }else {
+
+            }*/
 
 
 
