@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -12,7 +13,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -132,19 +135,50 @@ public class Mesas_Activity extends ActionBarActivity {
 
         //recView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         // buscando los pixeles a partir de dips con la densidad
-/*
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        int high=1280,mid=1080,low=720;
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-*/
+        Log.i("densidad",high+ " >= " + mid+"");
+        Log.i("densidad",mid+ " <= "+low+"");
+        Log.i("densidad", "baja <= "+low+"");
+        Log.i("densidad x ", width + "");
 
-/*        switch(metrics.densityDpi)
+        if (width>= high){
+            recView.setLayoutManager(new GridLayoutManager(this,5));
+            Log.i("densidad ","alta");
+        }else {
+            if ((width < high) && (width >= mid)) {
+                recView.setLayoutManager(new GridLayoutManager(this, 4));
+                Log.i("densidad ", "alta");
+            } else {
+                if ((width < mid) && (width > low)) {
+                    recView.setLayoutManager(new GridLayoutManager(this, 3));
+                    Log.i("densidad ", "media");
+                } else {
+                    if (width <= low) {
+                        recView.setLayoutManager(new GridLayoutManager(this, 2));
+                        Log.i("densidad ", "baja");
+                    } else {
+
+                    }
+                }
+            }
+        }
+/*
+        switch(metrics.densityDpi)
         {
             case DisplayMetrics.DENSITY_HIGH: //HDPI
                 recView.setLayoutManager(new GridLayoutManager(this,4));
                 break;
-            case DisplayMetrics.DENSITY_MEDIUM: //MDPI*/
-        recView.setLayoutManager(new GridLayoutManager(this, 2));
-/*                break;
+            case DisplayMetrics.DENSITY_MEDIUM: //MDPI
+
+                recView.setLayoutManager(new GridLayoutManager(this, 3));
+                break;
 
             case DisplayMetrics.DENSITY_LOW:  //LDPI
                 recView.setLayoutManager(new GridLayoutManager(this,2));
