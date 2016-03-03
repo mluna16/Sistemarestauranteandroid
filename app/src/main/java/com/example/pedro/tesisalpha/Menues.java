@@ -12,7 +12,8 @@ public class Menues {
     public Double precio;
     public String imagen;
     private boolean isSelected;
-    public Menues(String identidad, String img, String nom, String des, Double pre, Integer lim,boolean isSelected,int cant){
+    private boolean isSelected1;
+    public Menues(String identidad, String img, String nom, String des, Double pre, Integer lim,boolean isSelected,int cant,boolean isSelected1){
         id=identidad;
         imagen=img;
         nombre=nom;
@@ -21,6 +22,7 @@ public class Menues {
         limite=lim;
         this.cantidad=cant;
         this.isSelected = isSelected;
+        this.isSelected1 = isSelected1;
     }
     public String getId(){
         return id;
@@ -46,7 +48,12 @@ public class Menues {
     public boolean isSelected() {
         return isSelected;
     }
-
+    public boolean isSelected1() {
+        return isSelected1;
+    }
+    public void setSelected1(boolean isSelected) {
+        this.isSelected1 = isSelected1;
+    }
     public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
     }

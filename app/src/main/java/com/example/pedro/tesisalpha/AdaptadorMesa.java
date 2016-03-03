@@ -47,6 +47,11 @@ public class AdaptadorMesa
             toolbarCard = (Toolbar) itemView.findViewById(R.id.toolbarCard);
             //clr = (CardView) itemView.findViewById(R.id.card1);
                     //findViewById(R.id.card1);
+            /*            toolbarCard.setTitle("Nombre");
+            toolbarCard.setSubtitle(t.getNombre());*/
+
+            toolbarCard.inflateMenu(R.menu.menu_card);
+
 
         }
         CardView cardView= (CardView) itemView.findViewById(R.id.card1);
@@ -68,42 +73,7 @@ public class AdaptadorMesa
 
             }*/
 
-/*            toolbarCard.setTitle("Nombre");
-            toolbarCard.setSubtitle(t.getNombre());*/
 
-            toolbarCard.inflateMenu(R.menu.menu_card);
-            toolbarCard.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-
-                        case R.id.action_option1:
-//editar
-                            Intent intent = new Intent();
-                            intent.setAction("editar");
-                            intent.putExtra("nombre", t.getNombre());
-                            AdaptadorMesa.this.mContext.sendBroadcast(intent);
-                            break;
-                        case R.id.action_option2:
-//eliminar
-                            Intent intent1 = new Intent();
-                            intent1.setAction("eliminar");
-                            intent1.putExtra("idorder", t.getIdorder());
-                            AdaptadorMesa.this.mContext.sendBroadcast(intent1);
-                            break;
-                        case R.id.action_option3:
-//devolver
-                            Intent intent2 = new Intent();
-                            intent2.setAction("devolver");
-                            intent2.putExtra("nombre", t.getNombre());
-                            intent2.putExtra("idorder", t.getIdorder());
-                            intent2.putExtra("idproduct", t.getId());
-                            AdaptadorMesa.this.mContext.sendBroadcast(intent2);
-                            break;
-                    }
-                    return true;
-                }
-            });
             txtnommesa.setText(t.getNombre());
            // txtdes.setText(t.getDescripcion());
             txtpremesa.setText(t.getPrecio().toString());
@@ -142,9 +112,43 @@ public class AdaptadorMesa
 
     @Override
     public void onBindViewHolder(MesaViewHolder viewHolder, int pos) {
-        Mesas item = datos.get(pos);
+        final Mesas item = datos.get(pos);
 
         viewHolder.bindMesa(item);
+        viewHolder.toolbarCard.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem iten) {
+
+
+                switch (iten.getItemId()) {
+
+                    case R.id.action_option1:
+//editar
+                        Intent intent = new Intent();
+                        intent.setAction("editar");
+                        intent.putExtra("nombre", item.getNombre());
+                        AdaptadorMesa.this.mContext.sendBroadcast(intent);
+                        break;
+                    case R.id.action_option2:
+//eliminar
+                        Intent intent1 = new Intent();
+                        intent1.setAction("eliminar");
+                        intent1.putExtra("idorder",item.getIdorder());
+                        AdaptadorMesa.this.mContext.sendBroadcast(intent1);
+                        break;
+                    case R.id.action_option3:
+//devolver
+                        Intent intent2 = new Intent();
+                        intent2.setAction("devolver");
+                        intent2.putExtra("nombre", item.getNombre());
+                        intent2.putExtra("idorder", item.getIdorder());
+                        intent2.putExtra("idproduct", item.getId());
+                        AdaptadorMesa.this.mContext.sendBroadcast(intent2);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override

@@ -226,9 +226,9 @@ public class Pedido_Activity extends AppCompatActivity {
             recView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
             //recView.setLayoutManager(new GridLayoutManager(this,2));
 
-        /* recView.addItemDecoration(
-                 new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
-*/
+/*         recView.addItemDecoration(
+                 new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));*/
+
             recView.setItemAnimator(new DefaultItemAnimator());
             btnok = (ImageView)findViewById(R.id.button_listo);
             btnok.setOnClickListener(new View.OnClickListener() {

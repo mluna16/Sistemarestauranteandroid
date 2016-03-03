@@ -157,7 +157,7 @@ public class Menu_Activity extends ActionBarActivity {
         for(int i=0; i<productos.length(); i++){
             try {
                 JSONObject jsonObject = productos.getJSONObject(i);
-                datos.add(new Menues(jsonObject.getString("id_product"),jsonObject.getString("image"),jsonObject.getString("name"),jsonObject.getString("description"),jsonObject.getDouble("cost"),jsonObject.getInt("inventory"), false,1));
+                datos.add(new Menues(jsonObject.getString("id_product"),jsonObject.getString("image"),jsonObject.getString("name"),jsonObject.getString("description"),jsonObject.getDouble("cost"),jsonObject.getInt("inventory"), false,1,false));
 // "Descripcion " + jsonObject.getString("description")
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -194,8 +194,8 @@ public class Menu_Activity extends ActionBarActivity {
         recView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         //recView.setLayoutManager(new GridLayoutManager(this,2));
 
-/*         recView.addItemDecoration(
-                 new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));*/
+         recView.addItemDecoration(
+                 new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
 
         recView.setItemAnimator(new DefaultItemAnimator());
         btnok = (ImageView)findViewById(R.id.button_add_pedido);

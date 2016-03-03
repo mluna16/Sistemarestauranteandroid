@@ -32,30 +32,23 @@ android:orientation="horizontal"
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 android:baselineAligned="false"
-android:gravity="center">
+    android:weightSum="9">
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="155dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="5">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="normal"
-        android:textSize="20sp"
-        android:text="@string/Nombreplato"
-        android:padding="5dp"
-        android:editable="false"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:gravity="left" />
+    android:layout_width="0dp"
+    android:layout_height="fill_parent"
+    android:layout_weight="4">
+
     <TextView android:id="@+id/Lblnommesa"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:textStyle="normal"
-        android:textSize="16sp"
+
         android:text="@string/hello_world"
         android:padding="5dp"
+
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
         android:editable="false" />
 </LinearLayout>
 
@@ -86,51 +79,54 @@ android:gravity="center">
 </LinearLayout>-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="155dp"
-    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_height="fill_parent"
     android:layout_weight="2">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textStyle="normal"
-        android:textSize="20sp"
+        style="@style/TextAppearance.AppCompat.Caption"
         android:text="@string/Precio"
         android:padding="5dp"
         android:editable="false"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
+
         android:gravity="left" />
     <TextView android:id="@+id/Lblpremesa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:textStyle="normal"
-        android:textSize="16sp"
-        android:text="@string/hello_world"
+
+        android:text="0.00"
         android:padding="5dp"
+
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
         android:editable="false" />
 </LinearLayout>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="75dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="2">
+    android:layout_width="0dp"
+    android:layout_height="fill_parent"
+    android:layout_weight="3">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textStyle="normal"
-        android:textSize="20sp"
+        style="@style/TextAppearance.AppCompat.Caption"
         android:text="@string/Status"
         android:padding="5dp"
         android:editable="false"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
+
         android:gravity="left" />
     <TextView android:id="@+id/Lblstatus"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textStyle="normal"
-        android:textSize="16sp"
-        android:text="@string/hello_world"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+
+        android:text="devuelto"
         android:padding="5dp"
         android:editable="false" />
 </LinearLayout>

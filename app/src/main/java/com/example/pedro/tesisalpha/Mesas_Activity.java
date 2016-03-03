@@ -143,7 +143,7 @@ public class Mesas_Activity extends ActionBarActivity {
                 recView.setLayoutManager(new GridLayoutManager(this,4));
                 break;
             case DisplayMetrics.DENSITY_MEDIUM: //MDPI*/
-        recView.setLayoutManager(new GridLayoutManager(this, 3));
+        recView.setLayoutManager(new GridLayoutManager(this, 2));
 /*                break;
 
             case DisplayMetrics.DENSITY_LOW:  //LDPI

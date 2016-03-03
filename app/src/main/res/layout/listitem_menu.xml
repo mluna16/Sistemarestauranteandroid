@@ -1,185 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<!--<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card2"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp"
     card_view:cardBackgroundColor="@android:color/white"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="4dp"
-    card_view:cardUseCompatPadding="true">
+    card_view:cardUseCompatPadding="true">-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:gravity="center">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:layout_weight="1">
+    <ImageView
+        android:id="@+id/imagecarga"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:baselineAligned="false"
-        android:gravity="center">
+        android:adjustViewBounds="true"
+        android:contentDescription="Arepa"
+        android:src="@mipmap/arepa"/>
 
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:layout_weight="3">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:padding="5dp">
+
+            <TextView android:id="@+id/Lblnom"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textStyle="normal"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:text="@string/hello_world"
+                android:editable="false"
+
+                android:gravity="left"
+                android:padding="5dp" />
+        </LinearLayout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:orientation="horizontal"
 android:layout_width="fill_parent"
-android:layout_height="wrap_content"
+android:layout_height="80dp"
 android:baselineAligned="false"
 android:gravity="center"
     android:paddingLeft="5dp"
     android:paddingTop="5dp"
-    android:paddingRight="5dp">
+    android:paddingRight="5dp"
+    android:paddingBottom="5dp"
+    android:weightSum="9">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:weightSum="3">
         <TextView
             android:id="@+id/editText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
 
             android:text="@string/Cant"
             android:editable="false"
-            android:gravity="left" />
+            android:gravity="left"
+            android:layout_weight="1" />
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
             android:inputType="number"
             android:ems="3"
-            android:textSize="20sp"
-            style="@style/Base.TextAppearance.AppCompat.Body1"
+            style="@style/Base.TextAppearance.AppCompat.Subhead"
 
             android:id="@+id/Lblcant"
             android:numeric="integer"
             android:textAlignment="center"
             android:gravity="center"
-            android:hint="1" />
+            android:hint="1"
+            android:layout_weight="2" />
     </LinearLayout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_weight="6">
 
-    <TextView android:id="@+id/Lblnom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="normal"
-        android:textSize="20sp"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:text="@string/hello_world"
-        android:editable="false"
-
-        android:gravity="left"/>
-</LinearLayout>
-
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="75dp"
-    android:layout_height="75dp"
-    android:layout_weight="3">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="normal"
-        android:textSize="20sp"
-        android:text="@string/Numeromesa"
-        android:padding="5dp"
-        android:editable="false"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:gravity="left" />
-    <TextView android:id="@+id/Lbldes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="normal"
-        android:textSize="16sp"
-        android:text="@string/hello_world"
-        android:padding="5dp"
-        android:editable="false" />
-</LinearLayout>-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_weight="2">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="@string/Precio"
-        android:editable="false"
-
-        android:gravity="left" />
-    <TextView android:id="@+id/Lblpre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:text="@string/hello_world"
-        android:editable="false" />
-</LinearLayout>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_weight="2">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="@string/Disponible"
-        android:editable="false"
-
-        android:gravity="left" />
-    <TextView android:id="@+id/Lbllimite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
-        android:text="@string/hello_world"
-        android:editable="false" />
-</LinearLayout>
-    <CheckBox
-        android:id="@+id/chkSelected"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        />
-</LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/linearLayoutDetalles"
-        android:orientation="horizontal"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="0dp">
-
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_weight="3">
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.22"
-            android:text="@string/details"
-            android:textStyle="normal"
-            android:textSize="16sp"
-            android:editable="false"
-            style="@style/Base.TextAppearance.AppCompat.Body1"
-            android:gravity="end" />
-
-        <ImageView
-            android:id="@+id/imageViewExpand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/details"
-            android:src="@mipmap/more" />
+            android:textStyle="normal"
+            android:textSize="20sp"
+            android:text="@string/Numeromesa"
+            android:padding="5dp"
+            android:editable="false"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:gravity="left" />
+        <TextView android:id="@+id/Lbldes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="16sp"
+            android:text="@string/hello_world"
+            android:padding="5dp"
+            android:editable="false" />
+    </LinearLayout>-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="3"
+    android:weightSum="3">
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="@string/Precio"
+        style="@style/Base.TextAppearance.AppCompat.Caption"
+        android:gravity="left"
+        android:layout_weight="1" />
+    <TextView android:id="@+id/Lblpre"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:text="00000.00"
+        android:layout_weight="2"
+        android:layout_gravity="bottom" />
+</LinearLayout>
 
-    </LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="4"
+    android:weightSum="3">
+    <TextView
+        android:layout_width="fill_parent"
+        android:text="@string/Disponible"
+        android:editable="false"
+        style="@style/Base.TextAppearance.AppCompat.Caption"
+        android:gravity="left"
+        android:layout_weight="1"
+        android:layout_height="0dp" />
+    <TextView android:id="@+id/Lbllimite"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:text="@string/hello_world"
+        android:editable="false"
+        android:layout_weight="2"
+        android:layout_gravity="bottom" />
+</LinearLayout>
 
+</LinearLayout>
+
+
+        <!--    <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/linearLayoutDetalles"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="0dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.22"
+                    android:text="@string/details"
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:editable="false"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:gravity="end" />
+
+                <ImageView
+                    android:id="@+id/imageViewExpand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/details"
+                    android:src="@mipmap/more" />
+
+            </LinearLayout>-->
+<!--
     <LinearLayout
         android:id="@+id/linearLayoutDetails"
         android:layout_width="match_parent"
@@ -194,15 +218,7 @@ android:gravity="center"
             android:orientation="vertical"
             android:layout_weight="6"
             android:adjustViewBounds="true">
-        <ImageView
-            android:id="@+id/imagecarga"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:adjustViewBounds="true"
 
-            android:contentDescription="Arepa"
-            android:src="@mipmap/arepa"
-            android:layout_gravity="center" />
             </LinearLayout>
         <LinearLayout
             android:layout_width="500dp"
@@ -230,6 +246,22 @@ android:gravity="center"
                 android:textSize="16sp"
                 android:editable="false"  />
             </LinearLayout>
+    </LinearLayout>-->
     </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="5dp">
+        <CheckBox
+        android:id="@+id/chkSelected"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+            android:layout_weight="1"
+            />
+        </LinearLayout>
     </LinearLayout>
-</android.support.v7.widget.CardView>
+<!--
+</android.support.v7.widget.CardView>-->

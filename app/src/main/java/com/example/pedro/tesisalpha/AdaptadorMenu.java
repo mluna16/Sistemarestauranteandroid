@@ -4,16 +4,10 @@ package com.example.pedro.tesisalpha;
  * Created by Pedro on 22/03/2015.
  */
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.os.StrictMode;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +15,12 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdaptadorMenu
         extends RecyclerView.Adapter<AdaptadorMenu.MenuViewHolder>
@@ -53,19 +42,21 @@ public class AdaptadorMenu
         public TextView txtpre;
         public TextView txtlim;
         public CheckBox chkSelected;
-
+        private static final int TYPE_HEADER = 0;
+        private static final int TYPE_ITEM = 1;
+        private static final int TYPE_FOOTER = 2;
         public MenuViewHolder(View itemView,MyCustomEditTextListener m) {
             super(itemView);
-            linearLayoutDetails = (ViewGroup) itemView.findViewById(R.id.linearLayoutDetails);
+/*            linearLayoutDetails = (ViewGroup) itemView.findViewById(R.id.linearLayoutDetails);
             linearLayoutDetalles = (LinearLayout) itemView.findViewById(R.id.linearLayoutDetalles);
-            imageViewExpand = (ImageView) itemView.findViewById(R.id.imageViewExpand);
+            imageViewExpand = (ImageView) itemView.findViewById(R.id.imageViewExpand);*/
 
             //    txtimg = (ImageButton)itemView.findViewById(R.id.imageButton);
             txtnom = (TextView) itemView.findViewById(R.id.Lblnom);
             txtcant = (EditText) itemView.findViewById(R.id.Lblcant);
             txtpre = (TextView) itemView.findViewById(R.id.Lblpre);
             txtlim = (TextView) itemView.findViewById(R.id.Lbllimite);
-            img = (ImageView) itemView.findViewById(R.id.imagecarga);
+            //img = (ImageView) itemView.findViewById(R.id.imagecarga);
             myCustomEditTextListener = m;
             txtcant.addTextChangedListener(m);
             //clr = (CardView) itemView.findViewById(R.id.card1);
@@ -78,13 +69,13 @@ public class AdaptadorMenu
 
         }
 
-        public void toggleDetails(View view) {
-            if (linearLayoutDetails.getVisibility() == View.GONE) {
-                ExpandAndCollapseViewUtil.expand(linearLayoutDetails, DURATION);
+        public void toggleDetails(ViewGroup view,Boolean exp) {
+            if (exp) {
+                ExpandAndCollapseViewUtil.expand(view, DURATION);
                 imageViewExpand.setImageResource(R.mipmap.more);
                 rotate(-180.0f);
             } else {
-                ExpandAndCollapseViewUtil.collapse(linearLayoutDetails, DURATION);
+                ExpandAndCollapseViewUtil.collapse(view, DURATION);
                 imageViewExpand.setImageResource(R.mipmap.less);
                 rotate(180.0f);
             }
@@ -126,15 +117,7 @@ public class AdaptadorMenu
 
                 }*/
             //fin imagen carga
-            linearLayoutDetalles.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-
-                    toggleDetails(v);
-                    toggleDetails(v);
-                }
-            });
 
             txtnom.setText(t.getNombre());
 //            txtcant.setText(t.getCantidad());
@@ -186,6 +169,19 @@ public class AdaptadorMenu
             viewHolder.txtcant.setText("");
         }
 
+/*        final boolean exp=datos.get(pos).isSelected1();
+        viewHolder.toggleDetails(viewHolder.linearLayoutDetalles, exp);
+        viewHolder.linearLayoutDetalles.setTag(datos.get(pos));
+        viewHolder.linearLayoutDetalles.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                LinearLayout cb = (LinearLayout) v;
+                Menues contact = (Menues) cb.getTag();
+                viewHolder.toggleDetails(cb,!contact.isSelected1() );
+                datos.get(pos).setSelected1(!contact.isSelected1());
+            }
+        });*/
 
 /*        viewHolder.txtcant.setOnKeyListener(new View.OnKeyListener() {
             @Override
